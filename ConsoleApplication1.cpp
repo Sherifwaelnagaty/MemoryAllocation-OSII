@@ -1,0 +1,232 @@
+#include<iostream>
+using namespace std;
+
+void firstFit(int * SizeofBlocks, int numBlocks, int * SizeofProcesses, int numProcesses)
+{
+	//stores block number which the processes is allocated to
+	int* allocation = new int[numProcesses];
+
+	// Find the first situable block and assign the block number to the allocation array
+	for (int i = 0; i < numProcesses; i++)
+	{
+		for (int j = 0; j < numBlocks; j++)
+		{
+			if (SizeofBlocks[j] >= SizeofProcesses[i])
+			{
+				// allocate block number which is j to the allocation array which has the process number
+				allocation[i] = j;
+
+				//set the memory block into zero
+				SizeofBlocks[j] = 0;
+
+				break;
+			}
+		}
+		//if the allocation[i] is smaller than zero 
+		//so the process didn't find the situable block to be allocated in it 
+		if (allocation[i] < 0)
+		{
+			allocation[i] = -1;
+		}
+	}
+
+	cout << "\nProcess No.\tProcess Size. \tAllocated Block no.\n";
+
+	for (int i = 0; i < numProcesses; i++)
+	{
+
+
+		cout << " " << i + 1 << "\t\t"
+			<< SizeofProcesses[i] << "\t\t";
+
+		if (allocation[i] != -1)
+			cout << allocation[i] + 1;
+		else
+			cout << "Not Allocated";
+
+		cout << endl;
+	}
+}
+void bestFit(int* SizeofBlocks, int numBlocks, int* SizeofProcesses, int numProcesses)
+{
+	//stores block number which the processes is allocated to
+	int* allocation = new int[numProcesses];
+
+	// Find the smallest situable block and assign the block number to the allocation array
+	for (int i = 0; i < numProcesses; i++)
+	{
+		int bestIndex = -1;
+		for (int j = 0; j < numBlocks; j++)
+		{
+			if (SizeofBlocks[j] >= SizeofProcesses[i])
+			{
+				if (bestIndex == -1)
+					bestIndex = j;
+				else if (SizeofBlocks[bestIndex] > SizeofBlocks[j])
+					bestIndex = j;
+			}
+		}
+		if (allocation[i] < 0)
+		{
+			allocation[i] = -1;
+		}
+		// Finding the best fit for the current process
+		if (bestIndex != -1)
+		{
+			//allocate block number which is j to the allocation array which has the process number
+			allocation[i] = bestIndex;
+
+			//set the memory block into zero
+			SizeofBlocks[bestIndex] = 0;
+		}
+	}
+
+	cout << "\nProcess No.\tProcess Size. \tAllocated Block no.\n";
+
+	for (int i = 0; i < numProcesses; i++)
+	{
+
+
+		cout << " " << i + 1 << "\t\t"
+			<< SizeofProcesses[i] << "\t\t";
+
+		if (allocation[i] != -1)
+			cout << allocation[i] + 1;
+		else
+			cout << "Not Allocated";
+
+		cout << endl;
+	}
+}
+void worstFit(int* SizeofBlocks, int numBlocks, int* SizeofProcesses, int numProcesses)
+{
+	//stores block number which the processes is allocated to
+	int* allocation = new int[numProcesses];
+
+	// Find the Largest situable block and assign the block number to the allocation array
+	for (int i = 0; i < numProcesses; i++)
+	{
+		int worstIndex = -1;
+		for (int j = 0; j < numBlocks; j++)
+		{
+			if (SizeofBlocks[j] >= SizeofProcesses[i])
+			{
+				if (worstIndex == -1)
+					worstIndex = j;
+				else if (SizeofBlocks[worstIndex] < SizeofBlocks[j])
+					worstIndex = j;
+			}
+		}
+		if (allocation[i] < 0)
+		{
+			allocation[i] = -1;
+		}
+		// Finding the worst fit for the current process
+		if (worstIndex != -1)
+		{
+			//allocate block number which is j to the allocation array which has the process number
+			allocation[i] = worstIndex;
+
+			//set the memory block into zero
+			SizeofBlocks[worstIndex] = 0;
+		}
+	}
+	
+	cout << "\nProcess No.\tProcess Size. \tAllocated Block no.\n";
+
+	for (int i = 0; i < numProcesses; i++)
+	{
+
+
+		cout << " " << i + 1 << "\t\t"
+			<< SizeofProcesses[i] << "\t\t";
+
+		if (allocation[i] != -1)
+			cout << allocation[i] + 1;
+		else
+			cout << "Not Allocated";
+
+		cout << endl;
+	}
+}
+int main()
+{
+
+	int numBlocks;
+	int numProcesses;
+	//let User Enter the number of blocks
+	cout << "Enter the number of blocks  " << endl;
+	cin >> numBlocks;
+
+	int* SizeofBlocks = new int[numBlocks];
+
+	//let User Enter the block size
+	for (int i = 0; i < numBlocks; i++)
+	{
+		cout << "Enter the block size of " << i + 1 << " " << endl;
+		cin >> SizeofBlocks[i];
+
+	}
+	//let User Enter the number of processes
+	cout << "Enter the number of processes" << endl;
+	cin >> numProcesses;
+	int* SizeofProcesses = new int[numProcesses];
+
+	//let User Enter the process size
+	for (int j = 0; j < numProcesses; j++)
+	{
+		cout << "Enter the process size of " << j + 1 << " " << endl;
+		cin >> SizeofProcesses[j];
+
+	}
+	cout << "\nProcess Size \tBlock Size\n";
+	//if the num of blocks is bigger than the number of proccesses or vice versa 
+	int bigger = 0;
+	if (numBlocks > numProcesses)
+	{
+		bigger = numBlocks;
+	}
+	else
+	{
+		bigger = numProcesses;
+	}
+	//print the Block & Processes table 
+	for (int i = 0; i < bigger; i++)
+	{	
+		// print empty to the smaller array to prevent out of bound in it
+		if (i + 1 > numProcesses)
+		{
+			cout << " " << "empty" << "\t\t" << SizeofBlocks[i];
+		}
+		else if (i + 1 > numBlocks)
+		{
+			cout << " " << SizeofProcesses[i] << "\t\t" << "empty";
+		}
+		else
+		{
+			cout << " " << SizeofProcesses[i] << "\t\t" << SizeofBlocks[i];
+		}
+		cout << endl;
+	}
+	//Let the user choose the memory allocation method he want to use 
+	int choose;
+	cout << endl << "Choose the memory allocation method:" << endl << "1- First Fit Memory Allocation" << endl << "2- Best Fit Memory Allocation" << endl << "3- Worst Fit Allocation" << endl << endl;
+	cin >> choose;
+	//if he choose number 1 use firstFit Function
+	if (choose == 1) {
+
+		firstFit(SizeofBlocks, numBlocks, SizeofProcesses, numProcesses);
+	}
+	//if he choose number 2 use bestFit Function
+	else if (choose == 2)
+	{
+		bestFit(SizeofBlocks, numBlocks, SizeofProcesses, numProcesses);
+	}
+	//if he choose number 3 use worstFit Function
+	if (choose == 3)
+	{
+		worstFit(SizeofBlocks, numBlocks, SizeofProcesses, numProcesses);
+	}
+
+	return 0;
+}
